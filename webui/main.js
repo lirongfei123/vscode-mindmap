@@ -3,18 +3,18 @@
  */
 angular
   .module('kityminderDemo', ['kityminderEditor'])
-  .config(function(configProvider) {
+  .config(function (configProvider) {
     configProvider.set('imageUpload', '../server/imageUpload.php');
   })
-  .controller('MainController', function($scope) {
-    $scope.initEditor = function(editor, minder) {
+  .controller('MainController', function ($scope) {
+    $scope.initEditor = function (editor, minder) {
       window.editor = editor;
       window.minder = minder;
 
       /**
        * receive message event from extension
        */
-      window.addEventListener('message', function(event) {
+      window.addEventListener('message', function (event) {
         window.message = event.data;
         const { command } = window.message;
 
@@ -30,13 +30,25 @@ angular
         }
       });
 
-      window.addEventListener('keydown', e => {
+      window.addEventListener('keydown', (e) => {
         const keyCode = e.keyCode || e.which || e.charCode;
         const ctrlKey = e.ctrlKey || e.metaKey;
         if (ctrlKey && keyCode === 83) {
           const btnSave = document.querySelector('.km-export-save');
           btnSave.click();
         }
+      });
+
+      window.minder.on('click', (e) => {
+        try {
+          const link = e.minder.queryCommandValue('HyperLink');
+          if (link && link.url) {
+            window.vscode.postMessage({
+              command: 'clicklink',
+              link: link.url,
+            });
+          }
+        } catch (e) {}
       });
 
       window.vscode.postMessage({

@@ -4,3 +4,4 @@ node_modules
 *.vsix
 webui/node_modules
 webui/bower_components
+testDir
