@@ -53,7 +53,11 @@ angular
       window.minder.on('click', (e) => {
         try {
           const link = e.minder.queryCommandValue('HyperLink');
-          if (link && link.url) {
+          if (
+            link &&
+            link.url &&
+            e.kityEvent.targetShape.container.getType() === 'HyperLink'
+          ) {
             window.vscode.postMessage({
               command: 'clicklink',
               link: link.url,
