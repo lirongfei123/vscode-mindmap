@@ -1,3 +1,9 @@
+---
+noteId: "cc2008508c3811eaa86d7faf711335fa"
+tags: []
+
+---
+
 <p>
   <h1 align="center">vscode-mindmap</h1>
 </p>

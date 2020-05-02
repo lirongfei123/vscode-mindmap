@@ -53,3 +53,4 @@ webui/.jscsrc
 tsconfig.json
 vsc-extension-quickstart.md
 tslint.json
+notebook-*.vsix

@@ -6,15 +6,7 @@ import { resourceSchema } from './constant';
 const matchableFileTypes: string[] = ['xmind', 'km'];
 const viewType = 'vscode-mindmap.editor';
 export class MindEditorProvider implements vscode.CustomTextEditorProvider {
-  extensionChannels: any[];
-  constructor(private readonly context: vscode.ExtensionContext) {
-    this.extensionChannels = vscode.extensions.all
-      .filter(
-        (ext) =>
-          ext.isActive && ext.exports && ext.exports.exportedMessageChannel
-      )
-      .map((ext) => ext.exports.exportedMessageChannel);
-  }
+  constructor(private readonly context: vscode.ExtensionContext) {}
   static register(context: vscode.ExtensionContext) {
     const provider = new MindEditorProvider(context);
     const providerRegistration = vscode.window.registerCustomEditorProvider(
@@ -142,5 +134,14 @@ export class MindEditorProvider implements vscode.CustomTextEditorProvider {
         document.save();
       });
     }
+  }
+
+  get extensionChannels() {
+    return vscode.extensions.all
+      .filter(
+        (ext) =>
+          ext.isActive && ext.exports && ext.exports.exportedMessageChannel
+      )
+      .map((ext) => ext.exports.exportedMessageChannel);
   }
 }

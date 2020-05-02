@@ -5,3 +5,4 @@ node_modules
 webui/node_modules
 webui/bower_components
 testDir
+notebook-*.vsix

@@ -15,12 +15,12 @@ angular
     }, 30);
 
     $scope.shortCut = function (e) {
-      e.stopPropagation();
-
       if (e.keyCode == 13) {
         $scope.ok();
+        e.stopPropagation();
       } else if (e.keyCode == 27) {
         $scope.cancel();
+        e.stopPropagation();
       }
     };
 
