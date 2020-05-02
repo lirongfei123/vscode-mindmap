@@ -11,7 +11,12 @@ export class MindEditorProvider implements vscode.CustomTextEditorProvider {
     const provider = new MindEditorProvider(context);
     const providerRegistration = vscode.window.registerCustomEditorProvider(
       viewType,
-      provider
+      provider,
+      {
+        webviewOptions: {
+          retainContextWhenHidden: true,
+        },
+      }
     );
 
     return providerRegistration;
@@ -67,6 +72,18 @@ export class MindEditorProvider implements vscode.CustomTextEditorProvider {
                 document,
                 JSON.stringify(retData, null, 4),
                 true
+              );
+            } catch (ex) {
+              console.error(ex);
+            }
+            return;
+          case 'draft':
+            try {
+              const retData = JSON.parse(message.exportData);
+              this.updateDocument(
+                document,
+                JSON.stringify(retData, null, 4),
+                false
               );
             } catch (ex) {
               console.error(ex);

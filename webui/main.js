@@ -7,6 +7,16 @@ angular
     configProvider.set('imageUpload', '../server/imageUpload.php');
   })
   .controller('MainController', function ($scope) {
+    function listenContentChange() {
+      if (listenContentChange.listened) return;
+      window.minder.on('contentchange', (e) => {
+        window.vscode.postMessage({
+          command: 'draft',
+          exportData: JSON.stringify(window.minder.exportJson(), null, 4),
+        });
+      });
+      listenContentChange.listened = true;
+    }
     $scope.initEditor = function (editor, minder) {
       window.editor = editor;
       window.minder = minder;
@@ -23,6 +33,7 @@ angular
             try {
               const importData = JSON.parse(window.message.importData);
               window.minder.importJson(importData);
+              listenContentChange();
             } catch (ex) {
               console.error(ex);
             }
@@ -48,6 +59,7 @@ angular
               link: link.url,
             });
           }
+          // 捕获不到markdown中的链接点击,可能监听window可以做到
         } catch (e) {}
       });
 
