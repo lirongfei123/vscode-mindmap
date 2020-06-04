@@ -32,7 +32,9 @@ export class MindEditorProvider implements vscode.CustomTextEditorProvider {
     const resourcePath = vscode.Uri.file(
       path.join(this.context.extensionPath, 'webui')
     );
-    const resourceRealPath = resourcePath.with({ scheme: resourceSchema });
+
+    const resourceRealPath = webviewPanel.webview.asWebviewUri(resourcePath);
+    // const resourceRealPath = resourcePath.with({ scheme: resourceSchema });
     const fileContent =
       process.platform === 'win32'
         ? fs.readFileSync(onDiskPath.path.slice(1)).toString()
