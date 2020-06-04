@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { resourceSchema } from './constant';
 
 const matchableFileTypes: string[] = ['xmind', 'km'];
 const viewType = 'vscode-mindmap.editor';
