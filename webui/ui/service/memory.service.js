@@ -8,7 +8,7 @@
  *
  * @copyright: Baidu FEX, 2015
  */
-angular.module('kityminderEditor').service('memory', function() {
+angular.module('kityminderEditor').service('memory', function () {
   function isQuotaExceeded(e) {
     var quotaExceeded = false;
     if (e) {
@@ -33,12 +33,16 @@ angular.module('kityminderEditor').service('memory', function() {
   }
 
   return {
-    get: function(key) {
-      var value = window.vscode.getState()[key];
-      return null || JSON.parse(value);
+    get: function (key) {
+      try {
+        var value = window.vscode.getState()[key];
+        return JSON.parse(value);
+      } catch (error) {
+        return null;
+      }
     },
 
-    set: function(key, value) {
+    set: function (key, value) {
       try {
         // window.vscode.setState({[key]: JSON.stringify(value) });
         return true;
@@ -48,14 +52,14 @@ angular.module('kityminderEditor').service('memory', function() {
         }
       }
     },
-    remove: function(key) {
+    remove: function (key) {
       var value = window.vscode.getState()[key];
       // window.vscode.setState({
       //   [key]: null,
       // });
       return value;
     },
-    clear: function() {
+    clear: function () {
       // var prevState = window.vscode.getState();
       // for (var key in prevState) {
       //   window.vscode.setState({

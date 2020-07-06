@@ -5,7 +5,7 @@
   "main": "kityminder.editor.js",
   "scripts": {
     "init": "npm i -g wr && npm install -g less && npm install -g bower && bower install && npm install",
-    "build": "grunt build",
+    "build": "grunt build && rollup --config ./rollup.config.js",
     "dev": "grunt dev",
     "watch": "wr --exec \"lessc --source-map less/editor.less dist/kityminder.editor.css && grunt build\" less ui",
     "postinstall": "bower install",
