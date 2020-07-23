@@ -45,7 +45,7 @@ export class MindEditorProvider implements vscode.CustomTextEditorProvider {
     const fileName = document.fileName;
     const extName = path.extname(fileName);
 
-    const importData = document.getText() || {};
+    const importData = document.getText() || '{}';
 
     if (!matchableFileTypes.includes(extName.slice(1))) {
       return;

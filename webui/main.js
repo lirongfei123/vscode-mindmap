@@ -33,10 +33,10 @@ angular
             try {
               const importData = JSON.parse(window.message.importData);
               window.minder.importJson(importData);
-              listenContentChange();
             } catch (ex) {
               console.error(ex);
             }
+            listenContentChange();
             break;
         }
       });
