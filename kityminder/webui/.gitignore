@@ -6,3 +6,4 @@ dist/
 ui/templates.js
 .tmp/
 upload/
+core/

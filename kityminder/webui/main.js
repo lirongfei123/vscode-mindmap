@@ -40,15 +40,22 @@ angular
 
         switch (command) {
           case 'import': {
+            let importTask = Promise.resolve();
             try {
-              const importData = window.message.importData;
-              extName === '.svg'
-                ? window.minder.importData('svg', importData)
-                : window.minder.importJson(JSON.parse(importData));
+              importTask = importTask.then(() => {
+                const importData = window.message.importData;
+                if (extName === '.svg') {
+                  return new Promise((resolve) => {
+                    window.minder.importData('svg', importData).then(resolve);
+                  });
+                } else {
+                  window.minder.importJson(JSON.parse(importData || '{}'));
+                }
+              });
             } catch (ex) {
               console.error(ex);
             }
-            listenContentChange();
+            importTask.then(listenContentChange);
             break;
           }
         }
