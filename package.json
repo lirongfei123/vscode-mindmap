@@ -49,13 +49,13 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "npm run build",
     "build": "run-s build:extension build:core build:mind",
     "build:extension": "tsc -p ./",
     "build:core": "cd ./kityminder/core && npm run build",
     "build:mind": "cd ./kityminder/webui && npm run build",
     "watch": "tsc -watch -p ./",
-    "test": "npm run compile && node ./node_modules/vscode/bin/test",
+    "test": "npm run build && node ./node_modules/vscode/bin/test",
     "pack": "npx vsce package",
     "publish": "npx vsce publish patch"
   },
