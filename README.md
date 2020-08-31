@@ -6,4 +6,7 @@
 
 fork from https://github.com/souche/vscode-mindmap
 
-使用最新的CustomEditor Api
+Feature
+
+- 使用最新的CustomEditor Api，不会打开额外窗口
+- 支持`*.km.svg`文件
