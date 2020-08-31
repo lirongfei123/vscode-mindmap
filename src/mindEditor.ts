@@ -2,21 +2,18 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 
-const matchableFileTypes: string[] = ['xmind', 'km'];
+const matchableFileTypes: string[] = ['xmind', 'km', 'svg'];
 const viewType = 'vscode-mindmap.editor';
+
 export class MindEditorProvider implements vscode.CustomTextEditorProvider {
   constructor(private readonly context: vscode.ExtensionContext) {}
   static register(context: vscode.ExtensionContext) {
     const provider = new MindEditorProvider(context);
-    const providerRegistration = vscode.window.registerCustomEditorProvider(
-      viewType,
-      provider,
-      {
-        webviewOptions: {
-          retainContextWhenHidden: true,
-        },
-      }
-    );
+    const providerRegistration = vscode.window.registerCustomEditorProvider(viewType, provider, {
+      webviewOptions: {
+        retainContextWhenHidden: true,
+      },
+    });
 
     return providerRegistration;
   }
@@ -25,31 +22,22 @@ export class MindEditorProvider implements vscode.CustomTextEditorProvider {
     webviewPanel: vscode.WebviewPanel,
     token: vscode.CancellationToken
   ): void | Thenable<void> {
-    const onDiskPath = vscode.Uri.file(
-      path.join(this.context.extensionPath, 'webui', 'mindmap.html')
-    );
-    const resourcePath = vscode.Uri.file(
-      path.join(this.context.extensionPath, 'webui')
-    );
+    const onDiskPath = vscode.Uri.file(path.join(this.context.extensionPath, 'kityminder', 'webui', 'mindmap.html'));
+    const resourcePath = vscode.Uri.file(path.join(this.context.extensionPath, 'kityminder', 'webui'));
 
     const resourceRealPath = webviewPanel.webview.asWebviewUri(resourcePath);
-    // const resourceRealPath = resourcePath.with({ scheme: resourceSchema });
     const fileContent =
       process.platform === 'win32'
         ? fs.readFileSync(onDiskPath.path.slice(1)).toString()
         : fs.readFileSync(onDiskPath.path).toString();
-    const html = fileContent.replace(
-      /\$\{vscode\}/g,
-      resourceRealPath.toString()
-    );
+    const html = fileContent.replace(/\$\{vscode\}/g, resourceRealPath.toString());
     const fileName = document.fileName;
     const extName = path.extname(fileName);
-
-    const importData = document.getText() || '{}';
 
     if (!matchableFileTypes.includes(extName.slice(1))) {
       return;
     }
+    const importData = this.getContent(document);
     const panel = webviewPanel;
     panel.webview.options = {
       enableScripts: true,
@@ -68,24 +56,14 @@ export class MindEditorProvider implements vscode.CustomTextEditorProvider {
 
           case 'save':
             try {
-              const retData = JSON.parse(message.exportData);
-              this.updateDocument(
-                document,
-                JSON.stringify(retData, null, 4),
-                true
-              );
+              this.updateDocument(document, message, true);
             } catch (ex) {
               console.error(ex);
             }
             return;
           case 'draft':
             try {
-              const retData = JSON.parse(message.exportData);
-              this.updateDocument(
-                document,
-                JSON.stringify(retData, null, 4),
-                false
-              );
+              this.updateDocument(document, message, false);
             } catch (ex) {
               console.error(ex);
             }
@@ -135,17 +113,18 @@ export class MindEditorProvider implements vscode.CustomTextEditorProvider {
       chanel.postMessage(message);
     });
   }
+
   private updateDocument(
     document: vscode.TextDocument,
-    newContent: string,
+    message: {
+      command: string;
+      exportData: string;
+    },
     save?: boolean
   ) {
     const edit = new vscode.WorkspaceEdit();
-    edit.replace(
-      document.uri,
-      new vscode.Range(0, 0, document.lineCount, 0),
-      newContent
-    );
+    const newContent = message.exportData;
+    edit.replace(document.uri, new vscode.Range(0, 0, document.lineCount, 0), newContent);
     const editTask = vscode.workspace.applyEdit(edit);
     if (save) {
       editTask.then(() => {
@@ -154,12 +133,20 @@ export class MindEditorProvider implements vscode.CustomTextEditorProvider {
     }
   }
 
+  private getContent(document: vscode.TextDocument) {
+    const extName = path.extname(document.fileName);
+    let result = document.getText();
+    switch (extName) {
+      case '.km':
+        return result || '{}';
+      case '.svg':
+        return result || '';
+    }
+  }
+
   get extensionChannels() {
     return vscode.extensions.all
-      .filter(
-        (ext) =>
-          ext.isActive && ext.exports && ext.exports.exportedMessageChannel
-      )
+      .filter((ext) => ext.isActive && ext.exports && ext.exports.exportedMessageChannel)
       .map((ext) => ext.exports.exportedMessageChannel);
   }
 }
