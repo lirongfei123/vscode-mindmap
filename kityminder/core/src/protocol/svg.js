@@ -353,6 +353,10 @@ define(function (require, exports, module) {
         document.body.appendChild(svgContainer);
         svgContainer.innerHTML = svgXml;
         var svgDom = svgContainer.querySelector('svg');
+        // new file
+        if (!svgDom) {
+          return {};
+        }
         var json = JSON.parse(Base64.decode(svgDom.getAttribute('content')));
         return json;
       },

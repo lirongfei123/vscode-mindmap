@@ -24,7 +24,8 @@
   ],
   "scripts": {
     "dev": "grunt dev",
-    "build": "grunt build && cp -r ./dist/* ../webui/core"
+    "build": "grunt build && cp -r ./dist/* ../webui/core",
+    "bootstrap": "bower install"
   },
   "bugs": {
     "url": "https://github.com/fex-team/kityminder-core/issues"
@@ -41,9 +42,11 @@
     "seajs": "^2.3.0"
   },
   "devDependencies": {
+    "bower": "^1.8.8",
     "cz-conventional-changelog": "^1.1.5",
     "grunt": "~0.4.1",
     "grunt-browser-sync": "^2.2.0",
+    "grunt-cli": "^1.3.2",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-concat": "~0.5.0",
     "grunt-contrib-copy": "~0.8.2",

@@ -46,16 +46,18 @@ angular
                 const importData = window.message.importData;
                 if (extName === '.svg') {
                   return new Promise((resolve) => {
-                    window.minder.importData('svg', importData).then(resolve);
+                    // 可能出现格式不正确内部抛异常
+                    window.minder.importData('svg', importData).then(resolve, resolve);
                   });
                 } else {
+                  // 可能出现格式不正确内部抛异常
                   window.minder.importJson(JSON.parse(importData || '{}'));
                 }
               });
             } catch (ex) {
               console.error(ex);
             }
-            importTask.then(listenContentChange);
+            importTask.then(listenContentChange, listenContentChange);
             break;
           }
         }
