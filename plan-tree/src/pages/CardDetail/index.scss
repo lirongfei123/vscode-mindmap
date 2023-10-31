@@ -1,0 +1,47 @@
+.slideLeft {
+    .slide-enter {
+        z-index: 1;
+        top: 0;
+        left: 100vw !important;
+    }
+    
+    .slide-enter.slide-enter-active {
+        left: 0vw !important;
+        transition: all 250ms ease-in;
+    }
+    
+    .slide-exit {
+        z-index: 1;
+        top: 0;
+        left: 0vw !important;
+    }
+    
+    .slide-exit.slide-exit-active {
+        left: -100vw !important;
+        transition: all 250ms ease-in;
+    }
+}
+/** right */
+.slideRight {
+    .slide-enter {
+        z-index: 1;
+        top: 0;
+        left: -100vw !important;
+    }
+
+    .slide-enter.slide-enter-active {
+        left: 0vw !important;
+        transition: all 250ms ease-in;
+    }
+
+    .slide-exit {
+        z-index: 1;
+        top: 0vw;
+        left: 0vw !important;
+    }
+
+    .slide-exit.slide-exit-active {
+        left: 100vw !important;
+        transition: all 250ms ease-in;
+    }
+}

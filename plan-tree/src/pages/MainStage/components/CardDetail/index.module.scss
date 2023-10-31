@@ -1,0 +1,19 @@
+.lastChild {}
+
+.detailTitle {
+  font-size: 18px;
+  color: #ccc;
+}
+
+.wrap {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+}
+.tagText {
+  color: green;
+  border: 1px solid #ccc;
+  padding: 5px;
+  margin: 5px 0;
+}

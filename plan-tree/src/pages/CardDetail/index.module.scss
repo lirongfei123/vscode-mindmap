@@ -1,0 +1,13 @@
+.body_wrap {
+    width: 100vw;
+    height: 100vh;
+}
+.main_wrap {
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}

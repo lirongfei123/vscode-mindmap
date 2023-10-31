@@ -1,9 +1,9 @@
 {
-  "name": "vscode-mindmap",
-  "displayName": "vscode-mindmap",
+  "name": "vscode-plantree",
+  "displayName": "vscode-plantree",
   "icon": "resources/icon.png",
   "description": "mindmap for vscode",
-  "version": "0.0.16",
+  "version": "0.0.4",
   "publisher": "eightHundreds",
   "repository": {
     "type": "git",
@@ -16,44 +16,39 @@
     "Other"
   ],
   "activationEvents": [
-    "onCustomEditor:vscode-mindmap.editor"
+    "onCustomEditor:vscode-plantree.editor"
   ],
   "main": "./out/extension",
   "contributes": {
     "customEditors": [
       {
-        "viewType": "vscode-mindmap.editor",
+        "viewType": "vscode-plantree.editor",
         "displayName": "draw io editor",
         "selector": [
           {
-            "filenamePattern": "*.km"
-          },
-          {
-            "filenamePattern": "*.km.svg"
+            "filenamePattern": "*.plantree"
           }
         ]
       }
     ],
     "languages": [
       {
-        "id": "km",
+        "id": "plantree",
         "extensions": [
-          ".km",
-          ".km.svg"
+          ".plantree"
         ],
         "aliases": [
-          "KM",
-          "km"
+          "plantree",
+          "PLANTREE"
         ]
       }
     ]
   },
   "scripts": {
     "vscode:prepublish": "npm run build",
-    "build": "run-s build:extension build:core build:mind",
+    "build": "run-s build:extension build:core",
     "build:extension": "tsc -p ./",
-    "build:core": "cd ./kityminder/core && npm run build",
-    "build:mind": "cd ./kityminder/webui && npm run build",
+    "build:core": "cd ./plan-tree && npm run build",
     "watch": "tsc -watch -p ./",
     "test": "npm run build && node ./node_modules/vscode/bin/test",
     "pack": "npx vsce package",
@@ -64,8 +59,8 @@
   },
   "devDependencies": {
     "@types/mocha": "^2.2.42",
-    "@types/node": "^8.10.25",
-    "@types/vscode": "^1.44.0",
+    "@types/node": "8.10.25",
+    "@types/vscode": "1.44.0",
     "npm-run-all": "^4.1.5",
     "tslint": "^5.8.0",
     "typescript": "^2.6.1"

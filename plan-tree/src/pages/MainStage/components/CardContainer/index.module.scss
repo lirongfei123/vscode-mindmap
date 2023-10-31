@@ -1,0 +1,10 @@
+.container {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding-right: 10px;
+}
+.cardWrap {
+    flex: 1;
+}

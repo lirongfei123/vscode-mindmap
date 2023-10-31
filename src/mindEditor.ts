@@ -2,11 +2,11 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 
-const matchableFileTypes: string[] = ['xmind', 'km', 'svg'];
-const viewType = 'vscode-mindmap.editor';
+const matchableFileTypes: string[] = ['plantree'];
+const viewType = 'vscode-plantree.editor';
 
 export class MindEditorProvider implements vscode.CustomTextEditorProvider {
-  constructor(private readonly context: vscode.ExtensionContext) {}
+  constructor(private readonly context: vscode.ExtensionContext) { }
   static register(context: vscode.ExtensionContext) {
     const provider = new MindEditorProvider(context);
     const providerRegistration = vscode.window.registerCustomEditorProvider(viewType, provider, {
@@ -22,8 +22,8 @@ export class MindEditorProvider implements vscode.CustomTextEditorProvider {
     webviewPanel: vscode.WebviewPanel,
     token: vscode.CancellationToken
   ): void | Thenable<void> {
-    const onDiskPath = vscode.Uri.file(path.join(this.context.extensionPath, 'kityminder', 'webui', 'mindmap.html'));
-    const resourcePath = vscode.Uri.file(path.join(this.context.extensionPath, 'kityminder', 'webui'));
+    const onDiskPath = vscode.Uri.file(path.join(this.context.extensionPath, 'plan-tree', 'build', 'index.html'));
+    const resourcePath = vscode.Uri.file(path.join(this.context.extensionPath, 'plan-tree', 'build'));
 
     const resourceRealPath = webviewPanel.webview.asWebviewUri(resourcePath);
     const fileContent =
@@ -37,7 +37,10 @@ export class MindEditorProvider implements vscode.CustomTextEditorProvider {
     if (!matchableFileTypes.includes(extName.slice(1))) {
       return;
     }
-    const importData = this.getContent(document);
+    let importData = this.getContent(document);
+    if (!importData || (importData && importData.trim() === '')) {
+      importData = `[{"id":"root","data":{"title":"根节点","id":"root","idIndex":4,"cols":[{"width":"100","cards":[{"id":"root_4"}]}]}},{"id":"root_2","data":{"title":"实力","id":"root_2","idIndex":1,"cols":[{"width":"100","cards":[]}]}},{"id":"root_3","data":{"title":"实力","id":"root_3","idIndex":1,"cols":[{"width":"100","cards":[]}]}},{"id":"root_4","data":{"title":"实力","id":"root_4","idIndex":1,"cols":[{"width":"100","cards":[]}]}}]`;
+    }
     const panel = webviewPanel;
     panel.webview.options = {
       enableScripts: true,
@@ -134,14 +137,8 @@ export class MindEditorProvider implements vscode.CustomTextEditorProvider {
   }
 
   private getContent(document: vscode.TextDocument) {
-    const extName = path.extname(document.fileName);
     let result = document.getText();
-    switch (extName) {
-      case '.km':
-        return result || '{}';
-      case '.svg':
-        return result || '';
-    }
+    return result;
   }
 
   get extensionChannels() {

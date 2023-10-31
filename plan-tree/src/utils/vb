@@ -1,0 +1,110 @@
+class XiFunDatabase {
+  type
+  projectListTableName = 'projectList';
+  dbPromise
+  projectListTable
+  constructor(type) {
+    this.type = type;
+    let db;
+    this.dbPromise = new Promise((resolve) => {
+      var request = window.indexedDB.open(type + 'nodes', 2);
+      request.onupgradeneeded = (event) => {
+        db = event.target.result;
+        console.log(111);
+        this.projectListTable = new XifunProject(this.projectListTableName, db);
+        var transaction = event.target.transaction;
+
+        transaction.oncomplete = function(event) {    
+          // Now store is available to be populated
+          console.log('oplk1');
+          resolve(db);
+        }
+      }
+      request.onsuccess = (event) => {
+        db = request.result;
+        this.projectListTable = new XifunProject(this.projectListTableName, db);
+        console.log('32');
+        resolve(db);
+
+      };
+      request.onerror = (event) => {
+        console.log('321');
+        console.log(event);
+      };
+    });
+  }
+  async getProject(name) {
+    return this.dbPromise.then(async (db) => {
+      const list = await this.projectListTable.getItem(name);
+      if (list) {
+        await this.projectListTable.setItem(name, {
+          date: new Date().getTime(),
+          data: 'ok'
+        });
+      }
+      return new XifunProject(name, db);
+    });
+  }
+  async getProjectList() {
+    return this.dbPromise.then((db) => {
+      return this.projectListTable.getList();
+    });
+    
+  }
+}
+class XifunProject {
+  name;
+  db;
+  projectTableObj;
+  constructor(name, db) {
+    this.name = name;
+    this.db = db;
+    if (!db.objectStoreNames.contains(name)) {
+      this.projectTableObj = db.createObjectStore(name, { keyPath: 'id' });
+    }
+  }
+  async setItem(id, jsonDetail) {
+    return new Promise((resolve) => {
+      var request = this.db.transaction([this.name], 'readwrite').objectStore(this.name)
+        .add({ id: id, data: JSON.stringify(jsonDetail) });
+      request.onsuccess = function (event) {
+        console.log(`数据${id}写入成功`);
+        resolve();
+      };
+    });
+  }
+  async getItem(id) {
+    return new Promise((resolve) => {
+      var request = this.db.transaction([this.name], 'readwrite').objectStore(this.name).get(id);
+      request.onsuccess = function (event) {
+        console.log(`数据${id}读取成功`);
+        resolve(request.result);
+      };
+    });
+  }
+  async getList() {
+    return new Promise((resolve) => {
+      var list = [];
+      var request = this.db.transaction([this.name], 'readwrite').objectStore(this.name).openCursor();
+      request.onsuccess = function (event) {
+        var cursor = event.target.result;
+        if (cursor) {
+          list.push({
+            key: cursor.key,
+            id: cursor.value.id,
+            detail: cursor.value.detail
+          });
+          cursor.continue();
+        } else {
+          resolve(list);
+          console.log('没有更多数据了！');
+        }
+      };
+    });
+  }
+}
+const xifun = {
+  getDataBase: (type) => {
+    return new XiFunDatabase(type);
+  }
+}

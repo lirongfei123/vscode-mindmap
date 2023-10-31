@@ -1,0 +1,22 @@
+.stageWrap {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #e5e5e5;
+}
+.title {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.menuWrap {
+    height: 40px;
+}
+.content_wrap {
+    flex: 1;
+    margin-top: 10px;
+}
